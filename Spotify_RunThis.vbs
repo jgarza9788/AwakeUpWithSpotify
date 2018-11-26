@@ -13,16 +13,13 @@ Set objShell = WScript.CreateObject("WScript.Shell")
 
 on error resume next
 
-dim spotifyPath, URI
+dim playlist
 
 ' maxVolume = objArgs(0)
-spotifyPath = objArgs(0)
-URI = objArgs(1)
+playlist = objArgs(0)
 
 If Err.Number <> 0 Then
-    spotifyPath = "C:\Users\JGarza\AppData\Roaming\Spotify\Spotify.exe"
-    URI = "spotify:user:spotify:playlist:37i9dQZF1DX0UrRvztWcAU"
-    ' URL = "spotify:user:1257524228:playlist:7rub0Bqf5Ko2G81l6stMyQ"
+    playlist = "Covers"
 End If
 
 Function getSpotifyPID()
@@ -42,16 +39,16 @@ Function getSpotifyPID()
     Next
 end Function 
 
-sub quitWithPID(PID)
-    strComputer = "."
-    Set objWMIService = GetObject _
-        ("winmgmts:\\" & strComputer & "\root\cimv2")
-    Set colProcessList = objWMIService.ExecQuery _
-        ("Select * from Win32_Process Where ProcessID = " & Cstr(PID))
-    For Each objProcess in colProcessList
-        objProcess.Terminate()
-    Next
-end sub
+' sub quitWithPID(PID)
+'     strComputer = "."
+'     Set objWMIService = GetObject _
+'         ("winmgmts:\\" & strComputer & "\root\cimv2")
+'     Set colProcessList = objWMIService.ExecQuery _
+'         ("Select * from Win32_Process Where ProcessID = " & Cstr(PID))
+'     For Each objProcess in colProcessList
+'         objProcess.Terminate()
+'     Next
+' end sub
 
 ' sub MuteSystem()
 
@@ -79,46 +76,60 @@ end sub
 
 
 ' increaseSystemVolume()
-quitWithPID(getSpotifyPID())
+' quitWithPID(getSpotifyPID())
 ' msgbox("-spotify is killed-")
-WScript.sleep 1000
-objShell.Run(spotifyPath)
+' WScript.sleep 1000
+' objShell.Run(spotifyPath)
 ' msgbox("-spotify is Alive-")
-WScript.sleep 1000
-objShell.AppActivate getSpotifyPID()
+' WScript.sleep 1000
+' objShell.AppActivate getSpotifyPID()
 ' WScript.sleep 1500
 ' msgbox("-go to playlist-")
-WScript.sleep 5000
-objShell.Run(URI)
+' WScript.sleep 5000
+' objShell.Run(URI)
 ' WScript.sleep 3000
 ' msgbox("-play-")
 ' objShell.SendKeys "^+{UP}"
 
-WScript.sleep 1000
-For i = 0 to 20
-    objShell.SendKeys "^{DOWN}"
-    WScript.sleep 10  
-    NEXT
+set S = CreateObject("shell.application")
+S.ToggleDesktop
 
-' WScript.sleep 3000
-' objShell.SendKeys "^f"
-
-WScript.sleep 10000
-objShell.SendKeys "+{TAB}"
-WScript.sleep 100
-objShell.SendKeys "+{TAB}"
-WScript.sleep 100
-objShell.SendKeys "+{TAB}"
-WScript.sleep 100
-objShell.SendKeys "+{TAB}"
-WScript.sleep 100
+WScript.sleep 2000
+objShell.SendKeys "^{Esc}"
+WScript.sleep 2000
+objShell.SendKeys "Play my " + playlist + " Playlist "
+WScript.sleep 2000
 objShell.SendKeys "{ENTER}"
 
-' objShell.SendKeys "^{RIGHT}"
+' Wscript.sleep 2500
+' objShell.AppActivate getSpotifyPID()
 
-WScript.sleep 5000
-For i = 0 to 20
-    objShell.SendKeys "^{UP}"
-    WScript.sleep 2000  
-    NEXT
+' WScript.sleep 100
+' For i = 0 to 20
+'     objShell.SendKeys "^{DOWN}"
+'     WScript.sleep 10  
+'     NEXTPlay my Covers Playlist 
+
+
+' ' WScript.sleep 3000
+' ' objShell.SendKeys "^f"
+
+' ' WScript.sleep 10000
+' ' objShell.SendKeys "+{TAB}"
+' ' WScript.sleep 100
+' ' objShell.SendKeys "+{TAB}"
+' ' WScript.sleep 100
+' ' objShell.SendKeys "+{TAB}"
+' ' WScript.sleep 100
+' ' objShell.SendKeys "+{TAB}"
+' ' WScript.sleep 100
+' ' objShell.SendKeys "{ENTER}"
+
+' ' objShell.SendKeys "^{RIGHT}"
+
+' WScript.sleep 100
+' For i = 0 to 20
+'     objShell.SendKeys "^{UP}"
+'     WScript.sleep 2000  
+'     NEXT
 

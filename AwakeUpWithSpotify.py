@@ -53,21 +53,18 @@ def getSystemVolume():
 
 def createSettings():
     data = {}
-    data["spotifyPath"] = getSpotifyPath()
     data["maxSystemVolume"] = getSystemVolume()
     data["offTilNextDay"] = False
     data["offDay"] = ""
-    data["playListURI"] = "spotify:user:spotify:playlist:37i9dQZF1DX0UrRvztWcAU"
+    data["PlayList"] = "Covers"
     data["alarms"] = []
     data["alarms"].append({
-        "index": 0,
         "enable": True,
         "time": 900,
         "SMTWRFS": "0111110",
         "exeDay": 0
     })
     data["alarms"].append({
-        "index": 1,
         "enable": True,
         "time": 915,
         "SMTWRFS": "0111110",
@@ -128,17 +125,17 @@ def setSettings(data):
         json.dump(data, outfile, indent=4)
 
 
-def getSpotifyPath():
-    thisString = str(Path.home()) + "\\AppData\\Roaming\\Spotify\\Spotify.exe"
-    # print(Path(thisString).is_file())
-    if Path(thisString).is_file():
-        return str(Path.home()) + "\\AppData\\Roaming\\Spotify\\Spotify.exe"
-    else:
-        for subdir, dirs, files in os.walk("C:\\"):
-            for file in files:
-                if "Spotify.exe" in file:
-                    # print(os.path.join(subdir,file))
-                    return os.path.join(subdir,file)
+# def getSpotifyPath():
+#     thisString = str(Path.home()) + "\\AppData\\Roaming\\Spotify\\Spotify.exe"
+#     # print(Path(thisString).is_file())
+#     if Path(thisString).is_file():
+#         return str(Path.home()) + "\\AppData\\Roaming\\Spotify\\Spotify.exe"
+#     else:
+#         for subdir, dirs, files in os.walk("C:\\"):
+#             for file in files:
+#                 if "Spotify.exe" in file:
+#                     # print(os.path.join(subdir,file))
+#                     return os.path.join(subdir,file)
 
 
 # def ChangeValue():
@@ -149,10 +146,8 @@ def getSpotifyPath():
 #     setSettings(settings)
 
 
-def StartSpotify(URI):
-    os.startfile(getSpotifyPath())
-    # URI = "spotify:user:spotify:playlist:37i9dQZF1DX0UrRvztWcAU" 
-    os.system(os.path.join(dir,"Spotify_RunThis.vbs") + " " + getSpotifyPath() + " " + URI)
+def StartSpotify(_playList):
+    os.system(os.path.join(dir,"Spotify_RunThis.vbs") + " " + _playList)
 
 """
 def processInput(thisInput):
@@ -249,24 +244,24 @@ def EditMenu():
 
 
 
-def printSettings():
-    settings = getSettings()
+# def printSettings():
+#     settings = getSettings()
 
-    print("**************************************************")
-    print("{key}: {value}".format(key = "spotifyPath", value = settings["spotifyPath"]))
-    print("{key}: {value}".format(key = "maxSystemVolume", value = settings["maxSystemVolume"]))
-    print("{key}: {value}".format(key = "playListURI", value = settings["playListURI"]))
-    print("{key}: {value}".format(key = "offTilNextDay", value = settings["offTilNextDay"]))
-    print("**************************************************")
+#     print("**************************************************")
+#     print("{key}: {value}".format(key = "maxSystemVolume", value = settings["maxSystemVolume"]))
+#     print("{key}: {value}".format(key = "playListURI", value = settings["playListURI"]))
+#     print("{key}: {value}".format(key = "offTilNextDay", value = settings["offTilNextDay"]))
+#     print("**************************************************")
 
-    now = datetime.datetime.now()
-    i = 0
-    while i < len(settings["alarms"]):
-        print("{index}: {time} | {SMTWRFS} | {enable}".format(
-            index=i, time=settings["alarms"][i]["time"], SMTWRFS=settings["alarms"][i]["SMTWRFS"],enable = settings["alarms"][i]["enable"]
-            ))
-        i+=1
-    print("\n")
+#     now = datetime.datetime.now()
+#     i = 0
+#     while i < len(settings["alarms"]):
+#         print("{index}: {time} | {SMTWRFS} | {enable}".format(
+#             index=i, time=settings["alarms"][i]["time"], SMTWRFS=settings["alarms"][i]["SMTWRFS"],enable = settings["alarms"][i]["enable"]
+#             ))
+#         i+=1
+#     print("\n")
+
 
 def printTimes():
     settings = getSettings()
@@ -325,6 +320,8 @@ def playAlarms():
     d = getDay()
     # print(d)
 
+
+
     i = 0
     while i < len(settings["alarms"]):
 
@@ -333,12 +330,28 @@ def playAlarms():
         #enabled and has not played today
         if settings["alarms"][i]["enable"] == True and SMTWRFS(settings["alarms"][i]["SMTWRFS"]) and settings["alarms"][i]["exeDay"] < d:
             if settings["alarms"][i]["time"] <= t :
-                StartSpotify(settings["URI"])
+                StartSpotify(settings["PlayList"])
                 settings["alarms"][i]["exeDay"] = d
                 setSettings(settings)
                 setSystemVolume(settings["maxSystemVolume"])
                 print("*** playing Alarm" + str(i) + " ***")
         i+=1
+
+    # setSystemVolume(0.0)
+    # i = 0 
+    # currentVol = 0.0
+
+    # # print(currentVol)
+    # # print(settings["maxSystemVolume"])
+
+    # setSystemVolume(0.0)
+    # while i < 100:
+    #     i += 1
+    #     currentVol = (settings["maxSystemVolume"]/100) * i
+    #     setSystemVolume(currentVol)
+    #     time.sleep(0.5)
+
+
 
 def MainMenu():
     try:
@@ -350,7 +363,7 @@ def MainMenu():
             printTimes()
             print(Style.RESET_ALL)
             playAlarms()
-            time.sleep(15)
+            time.sleep(5)
 # print(datetime.datetime.now().time())
     except KeyboardInterrupt:
         i = 1
