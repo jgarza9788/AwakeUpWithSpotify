@@ -1,0 +1,33 @@
+{
+    "spotifyPath": "C:\\Users\\JGarza\\AppData\\Roaming\\Spotify\\Spotify.exe",
+    "maxSystemVolume": 0.4,
+    "offTilNextDay": false,
+    "offDay": "",
+    "URI": "spotify:user:1257524228:playlist:7rub0Bqf5Ko2G81l6stMyQ",
+    "alarms": [
+        {
+            "enable": true,
+            "time": 400,
+            "SMTWRFS": "0111110",
+            "exeDay": 20181125
+        },
+        {
+            "enable": true,
+            "time": 415,
+            "SMTWRFS": "0111110",
+            "exeDay": 0
+        },
+        {
+            "enable": true,
+            "time": 430,
+            "SMTWRFS": "0111110",
+            "exeDay": 20181109
+        },
+        {
+            "enable": true,
+            "time": 1718,
+            "SMTWRFS": "1111111",
+            "exeDay": 20181125
+        }
+    ]
+}
