@@ -1,20 +1,42 @@
 {
-    "maxSystemVolume": 0.05,
     "offTilNextDay": false,
     "offDay": "",
-    "PlayList": "Covers",
+    "PlayListOrSong": "\"Your Time Capsule\"",
     "alarms": [
         {
             "enable": true,
-            "time": 1149,
+            "volume": 0.01,
+            "time": 400,
             "SMTWRFS": "0111110",
-            "exeDay": 20181126
+            "exeDay": 20181203
         },
         {
             "enable": true,
-            "time": 915,
+            "volume": 0.02,
+            "time": 415,
             "SMTWRFS": "0111110",
-            "exeDay": 20181126
+            "exeDay": 20181203
+        },
+        {
+            "enable": true,
+            "volume": 0.03,
+            "time": 430,
+            "SMTWRFS": "0111110",
+            "exeDay": 20181203
+        },
+        {
+            "enable": true,
+            "volume": 0.04,
+            "time": 445,
+            "SMTWRFS": "0111110",
+            "exeDay": 20181203
+        },
+        {
+            "enable": true,
+            "volume": 0.04,
+            "time": 500,
+            "SMTWRFS": "0111110",
+            "exeDay": 20181203
         }
     ]
 }
