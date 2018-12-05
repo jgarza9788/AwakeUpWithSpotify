@@ -105,6 +105,9 @@ def printTimes():
     settings = getSettings()
     color = ""
 
+    print(Fore.LIGHTGREEN_EX + "PlayList\\Song: {item}".format(item=settings["PlayListOrSong"]))
+    print(Style.RESET_ALL)
+
     print("#, time, SMTWRFS, enable")
     print("*******************************")
 
@@ -114,10 +117,12 @@ def printTimes():
 
         if settings["alarms"][i]["enable"] == False :
             color = Fore.RED
+        elif settings["alarms"][i]["exeDay"] == getDay():
+            color = Fore.LIGHTBLUE_EX
         else:
             color = Fore.RESET
 
-        print(color + "{index} | {time} | {SMTWRFS} | {enable}".format(
+        print(color +  "{index} | {time} | {SMTWRFS} | {enable}".format(
             index=i, time=settings["alarms"][i]["time"], SMTWRFS=settings["alarms"][i]["SMTWRFS"],enable = settings["alarms"][i]["enable"]
             ))
         i+=1
