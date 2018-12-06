@@ -1,42 +1,49 @@
 {
     "offTilNextDay": false,
     "offDay": "",
-    "PlayListOrSong": "\"Your Time Capsule\"",
+    "PlayListOrSong": "Chop Suey!",
     "alarms": [
         {
             "enable": true,
             "volume": 0.01,
             "time": 400,
             "SMTWRFS": "0111110",
-            "exeDay": 20181204
+            "exeDay": 0
         },
         {
             "enable": true,
             "volume": 0.02,
             "time": 415,
             "SMTWRFS": "0111110",
-            "exeDay": 20181203
+            "exeDay": 0
         },
         {
             "enable": true,
             "volume": 0.03,
             "time": 430,
             "SMTWRFS": "0111110",
-            "exeDay": 20181203
+            "exeDay": 0
         },
         {
             "enable": true,
             "volume": 0.04,
             "time": 445,
             "SMTWRFS": "0111110",
-            "exeDay": 20181203
+            "exeDay": 0
         },
         {
             "enable": true,
             "volume": 0.04,
             "time": 500,
             "SMTWRFS": "0111110",
-            "exeDay": 20181203
+            "exeDay": 0
+        },
+        {
+            "enable": false,
+            "volume": 0.04,
+            "time": 1800,
+            "SMTWRFS": "0111110",
+            "exeDay": 20181205
         }
     ]
 }

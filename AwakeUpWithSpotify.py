@@ -172,7 +172,7 @@ def playAlarms():
 
         #enabled and has not played today
         if settings["alarms"][i]["enable"] == True and SMTWRFS(settings["alarms"][i]["SMTWRFS"]) and settings["alarms"][i]["exeDay"] < d:
-            if settings["alarms"][i]["time"] <= t :
+            if settings["alarms"][i]["time"] <= t and settings["alarms"][i]["time"] + 10 >= t:
                 StartSpotify(settings["PlayListOrSong"])
                 settings["alarms"][i]["exeDay"] = d
                 setSettings(settings)
