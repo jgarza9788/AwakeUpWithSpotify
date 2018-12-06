@@ -97,7 +97,7 @@ S.ToggleDesktop
 WScript.sleep 2000
 objShell.SendKeys "^{Esc}"
 WScript.sleep 2000
-objShell.SendKeys "Play my " + playlist + " Playlist "
+        objShell.SendKeys "Play my " + playlist + " Playlist in Spotify"
 WScript.sleep 2000
 objShell.SendKeys "{ENTER}"
 
