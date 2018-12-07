@@ -8,14 +8,14 @@
             "volume": 0.01,
             "time": 400,
             "SMTWRFS": "0111110",
-            "exeDay": 0
+            "exeDay": 20181200
         },
         {
             "enable": true,
             "volume": 0.02,
-            "time": 415,
+            "time": 413,
             "SMTWRFS": "0111110",
-            "exeDay": 0
+            "exeDay": 20181206
         },
         {
             "enable": true,
