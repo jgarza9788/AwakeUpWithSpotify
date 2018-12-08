@@ -105,7 +105,8 @@ def printTimes():
     settings = getSettings()
     color = ""
 
-    print(Fore.LIGHTGREEN_EX + "PlayList\\Song: {item}".format(item=settings["PlayListOrSong"]))
+    # print(Fore.LIGHTGREEN_EX + "PlayList: {item}".format(item=settings["PlayList"]))
+    # print(Fore.LIGHTGREEN_EX + "File: {item}".format(item=settings["File"]))
     print(Style.RESET_ALL)
 
     print("#, time, SMTWRFS, enable")
@@ -173,11 +174,27 @@ def playAlarms():
         #enabled and has not played today
         if settings["alarms"][i]["enable"] == True and SMTWRFS(settings["alarms"][i]["SMTWRFS"]) and settings["alarms"][i]["exeDay"] < d:
             if settings["alarms"][i]["time"] <= t and settings["alarms"][i]["time"] + 10 >= t:
-                StartSpotify(settings["PlayListOrSong"])
+                # StartSpotify("\"" + settings["PlayList"] + "\"")
+                
+                if re.match("[A-Z]:.*",settings["alarms"][i]["file"]):
+                    os.startfile(settings["alarms"][i]["file"])
+                else:
+                    os.startfile(os.path.join(dir,settings["alarms"][i]["file"]))
+
+                # os.startfile(os.path.join(dir,settings["alarms"][i]["file"]))
                 settings["alarms"][i]["exeDay"] = d
                 setSettings(settings)
                 setSystemVolume(settings["alarms"][i]["volume"])
                 print("*** playing Alarm" + str(i) + " ***")
+        i+=1
+
+def disableUntilTomorrow():
+    settings = getSettings()
+    t = getTime()
+    d = getDay()
+    i = 0
+    while i < len(settings["alarms"]):
+        settings["alarms"][i]["exeDay"] = d
         i+=1
 
 
@@ -191,7 +208,9 @@ def MainMenu():
             printTimes()
             print(Style.RESET_ALL)
             playAlarms()
+            # print("string"[:2])
             time.sleep(5)
+            
 # print(datetime.datetime.now().time())
     except KeyboardInterrupt:
         i = 1

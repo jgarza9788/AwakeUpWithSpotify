@@ -1,49 +1,52 @@
 {
-    "offTilNextDay": false,
-    "offDay": "",
-    "PlayListOrSong": "Chop Suey!",
     "alarms": [
         {
             "enable": true,
-            "volume": 0.01,
+            "file": "alarms\\Awaken.mp3",
+            "volume": 0.05,
             "time": 400,
             "SMTWRFS": "0111110",
-            "exeDay": 20181200
+            "exeDay": 20181207
         },
         {
             "enable": true,
-            "volume": 0.02,
+            "file": "alarms\\Awaken.mp3",
+            "volume": 0.05,
             "time": 413,
             "SMTWRFS": "0111110",
-            "exeDay": 20181206
+            "exeDay": 20181207
         },
         {
             "enable": true,
-            "volume": 0.03,
+            "file": "alarms\\Awaken.mp3",
+            "volume": 0.1,
             "time": 430,
             "SMTWRFS": "0111110",
-            "exeDay": 0
+            "exeDay": 20181207
         },
         {
             "enable": true,
-            "volume": 0.04,
+            "file": "alarms\\Awaken.mp3",
+            "volume": 0.2,
             "time": 445,
             "SMTWRFS": "0111110",
-            "exeDay": 0
+            "exeDay": 20181207
         },
         {
             "enable": true,
-            "volume": 0.04,
+            "file": "alarms\\Awaken.mp3",
+            "volume": 0.2,
             "time": 500,
             "SMTWRFS": "0111110",
-            "exeDay": 0
+            "exeDay": 20181207
         },
         {
-            "enable": false,
-            "volume": 0.04,
-            "time": 1800,
+            "enable": true,
+            "file": "D:\\Music\\8Bit Universe\\Unknown Album\\Safety Dance (8Bit Cover).mp3",
+            "volume": 0.05,
+            "time": 2126,
             "SMTWRFS": "0111110",
-            "exeDay": 20181205
+            "exeDay": 20181207
         }
     ]
 }
