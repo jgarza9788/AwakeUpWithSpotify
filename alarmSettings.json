@@ -6,7 +6,7 @@
             "volume": 0.01,
             "time": 400,
             "SMTWRFS": "0111110",
-            "exeDay": 20181215
+            "exeDay": 20181218
         },
         {
             "enable": true,
@@ -14,7 +14,7 @@
             "volume": 0.02,
             "time": 415,
             "SMTWRFS": "0111110",
-            "exeDay": 20181215
+            "exeDay": 20181218
         },
         {
             "enable": true,
@@ -22,7 +22,7 @@
             "volume": 0.05,
             "time": 430,
             "SMTWRFS": "0111110",
-            "exeDay": 20181215
+            "exeDay": 20181218
         },
         {
             "enable": true,
@@ -30,7 +30,7 @@
             "volume": 0.05,
             "time": 445,
             "SMTWRFS": "0111110",
-            "exeDay": 20181215
+            "exeDay": 20181218
         },
         {
             "enable": true,
@@ -38,15 +38,32 @@
             "volume": 0.05,
             "time": 500,
             "SMTWRFS": "0111110",
-            "exeDay": 20181215
+            "exeDay": 20181218
         },
         {
-            "enable": false,
+            "enable": true,
             "file": "D:\\Music\\8Bit Universe\\Unknown Album\\Safety Dance (8Bit Cover).mp3",
             "volume": 0.05,
-            "time": 1822,
-            "SMTWRFS": "1111111",
-            "exeDay": 20181215
+            "time": 600,
+            "SMTWRFS": "1000001",
+            "exeDay": 20181218
+        },
+        {
+            "enable": true,
+            "file": "D:\\Music\\8Bit Universe\\Unknown Album\\Safety Dance (8Bit Cover).mp3",
+            "volume": 0.05,
+            "time": 615,
+            "SMTWRFS": "1000001",
+            "exeDay": 20181218
+        },
+        {
+            "enable": true,
+            "file": "D:\\Music\\8Bit Universe\\Unknown Album\\Safety Dance (8Bit Cover).mp3",
+            "volume": 0.05,
+            "time": 630,
+            "SMTWRFS": "1000001",
+            "exeDay": 20181218
         }
+
     ]
 }

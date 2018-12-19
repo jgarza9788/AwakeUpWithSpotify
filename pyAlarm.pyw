@@ -137,8 +137,8 @@ def printTimes():
 #     else:
 #         return int(str(datetime.datetime.now().time())[:5].replace(":",""))
 
-# def getDay():
-#     return int(str(datetime.datetime.now().date())[:10].replace("-",""))
+def getDay():
+    return int(str(datetime.datetime.now().date())[:10].replace("-",""))
 
 
 # def SMTWRFS(schedule):
@@ -194,7 +194,6 @@ def printTimes():
 
 def disableUntilTomorrow():
     settings = getSettings()
-    t = getTime()
     d = getDay()
     i = 0
     while i < len(settings["alarms"]):
@@ -202,6 +201,7 @@ def disableUntilTomorrow():
         i+=1
     setSettings(settings)
 
+# disableUntilTomorrow()
 
 def openSettings():
     os.startfile(settingsPath)
@@ -270,7 +270,8 @@ tray.setContextMenu(menu)
 
 # os.startfile("timer.pyw")
 
-proc = subprocess.Popen(['py', 'timer.pyw'], shell=True)
+timer = os.path.join(dir,"timer.pyw")
+proc = subprocess.Popen(['py', timer], shell=True)
 
 app.exec_()
 
