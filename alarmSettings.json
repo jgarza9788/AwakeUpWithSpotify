@@ -6,7 +6,7 @@
             "volume": 0.01,
             "time": 400,
             "SMTWRFS": "0111110",
-            "exeDay": 20181218
+            "exeDay": 20181220
         },
         {
             "enable": true,
@@ -14,7 +14,7 @@
             "volume": 0.02,
             "time": 415,
             "SMTWRFS": "0111110",
-            "exeDay": 20181218
+            "exeDay": 20181220
         },
         {
             "enable": true,
@@ -22,7 +22,7 @@
             "volume": 0.05,
             "time": 430,
             "SMTWRFS": "0111110",
-            "exeDay": 20181218
+            "exeDay": 20181220
         },
         {
             "enable": true,
@@ -30,7 +30,7 @@
             "volume": 0.05,
             "time": 445,
             "SMTWRFS": "0111110",
-            "exeDay": 20181218
+            "exeDay": 20181220
         },
         {
             "enable": true,
@@ -38,7 +38,7 @@
             "volume": 0.05,
             "time": 500,
             "SMTWRFS": "0111110",
-            "exeDay": 20181218
+            "exeDay": 20181220
         },
         {
             "enable": true,
@@ -46,7 +46,7 @@
             "volume": 0.05,
             "time": 600,
             "SMTWRFS": "1000001",
-            "exeDay": 20181218
+            "exeDay": 20181220
         },
         {
             "enable": true,
@@ -54,7 +54,7 @@
             "volume": 0.05,
             "time": 615,
             "SMTWRFS": "1000001",
-            "exeDay": 20181218
+            "exeDay": 20181220
         },
         {
             "enable": true,
@@ -62,8 +62,7 @@
             "volume": 0.05,
             "time": 630,
             "SMTWRFS": "1000001",
-            "exeDay": 20181218
+            "exeDay": 20181220
         }
-
     ]
 }
