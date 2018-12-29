@@ -67,8 +67,9 @@ the last day this alarm was executed
 ```
 
 
+
 ## New Feature(s)
 * In System Tray
 * Disable Until Tomorrow
 
-
+![Gif](https://i.imgur.com/mFBODIy.gif)
