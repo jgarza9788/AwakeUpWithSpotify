@@ -8,6 +8,8 @@ An alarm clock (written in Python, Json) that plays mp3 files.
 * Python  
 * pycaw (python Module)  
 ~~* colorama (python Module)~~
+* portalocker
+
 
 ## Settings
 settings are in a json file.  

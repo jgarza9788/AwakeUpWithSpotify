@@ -16,7 +16,7 @@ from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
-
+import portalocker
 
 
 dir = os.path.dirname(__file__)
@@ -69,28 +69,49 @@ def createSettings():
         "SMTWRFS": "0111110",
         "exeDay": 0
     })
-    with open(settingsPath, 'w') as outfile:
+    # with open(settingsPath, 'w') as outfile:
+    #     json.dump(data, outfile, indent=4)
+    #     setSettings(data)
+    with portalocker.Lock(settingsPath,'w', timeout=60) as outfile:
         json.dump(data, outfile, indent=4)
-        setSettings(data)
+        # flush and sync to filesystem
+        outfile.flush()
+        os.fsync(outfile.fileno())
 
 
 def getSettings():
     if os.path.isfile(settingsPath):
-        with open(settingsPath) as json_file:  
+        with open(settingsPath,'r') as json_file:  
             # print("allData:: \n" + str(settings) + "\n")
             return json.load(json_file)
+        # with portalocker.Lock(settingsPath,'w', timeout=60) as json_file:
+        #     return json.load(json_file)
+        #     # flush and sync to filesystem
+        #     outfile.flush()
+        #     os.fsync(outfile.fileno())
     else:
         createSettings()
-        with open(settingsPath) as f:
+        with open(settingsPath,'r') as f:
             return json.load(f)
-
-getSettings()
+        # with portalocker.Lock(settingsPath,'w', timeout=60) as f:
+        #     return json.load(json_file)
+        #     # flush and sync to filesystem
+        #     outfile.flush()
+        #     os.fsync(outfile.fileno())
 
 def setSettings(data):
     # print("data: \n" + str(data))
-    with open(settingsPath, 'w') as outfile:
+    # with open(settingsPath, 'w') as outfile:
+    #     json.dump(data, outfile, indent=4)
+    with portalocker.Lock(settingsPath,'w', timeout=60) as outfile:
         json.dump(data, outfile, indent=4)
+        # flush and sync to filesystem
+        outfile.flush()
+        os.fsync(outfile.fileno())
 
+# settings = getSettings()
+# setSettings(settings)
+# exit()
 
 #this is no longer being used...but keep here for reference
 """
