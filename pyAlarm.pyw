@@ -271,6 +271,7 @@ tray = QSystemTrayIcon()
 tray.setIcon(icon)
 tray.setVisible(True)
 
+
 # Create the menu
 menu = QMenu()
 action1 = QAction("Open Settings")
