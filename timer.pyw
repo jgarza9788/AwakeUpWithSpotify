@@ -1,17 +1,14 @@
 
 import os, json,datetime, re,time
 from pathlib import Path
-import portalocker
+
+import alarmDataManager as ADM
 
 #audio settings stuff
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
-dir = os.path.dirname(__file__)
-# print(dir)
-settingsPath = os.path.join(dir,"alarmSettings.json").replace("\\","/")
-settings = ""
 
 def setSystemVolume(level):
     # from ctypes import cast, POINTER
@@ -36,70 +33,6 @@ def getSystemVolume():
     return round(volume.GetMasterVolumeLevelScalar(),4)
 
 
-def createSettings():
-    data = {}
-    data["alarms"] = []
-    data["alarms"].append({
-        "enable": True,
-        "file": "alarms\\Awake.mp3",
-        "volume": 0.05,
-        "time": 900,
-        "SMTWRFS": "0111110",
-        "exeDay": 0
-    })
-    data["alarms"].append({
-        "enable": True,
-        "file": "Hey_hey.mp3",
-        "volume": 0.05,
-        "time": 915,
-        "SMTWRFS": "0111110",
-        "exeDay": 0
-    })
-    # with open(settingsPath, 'w') as outfile:
-    #     json.dump(data, outfile, indent=4)
-    #     setSettings(data)
-    with portalocker.Lock(settingsPath,'w', timeout=60) as outfile:
-        json.dump(data, outfile, indent=4)
-        # flush and sync to filesystem
-        outfile.flush()
-        os.fsync(outfile.fileno())
-
-
-def getSettings():
-    if os.path.isfile(settingsPath):
-        with open(settingsPath,'r') as json_file:  
-            # print("allData:: \n" + str(settings) + "\n")
-            return json.load(json_file)
-        # with portalocker.Lock(settingsPath,'w', timeout=60) as json_file:
-        #     return json.load(json_file)
-        #     # flush and sync to filesystem
-        #     outfile.flush()
-        #     os.fsync(outfile.fileno())
-    else:
-        createSettings()
-        with open(settingsPath,'r') as f:
-            return json.load(f)
-        # with portalocker.Lock(settingsPath,'w', timeout=60) as f:
-        #     return json.load(json_file)
-        #     # flush and sync to filesystem
-        #     outfile.flush()
-        #     os.fsync(outfile.fileno())
-
-
-def setSettings(data):
-    # print("data: \n" + str(data))
-    # with open(settingsPath, 'w') as outfile:
-    #     json.dump(data, outfile, indent=4)
-    with portalocker.Lock(settingsPath,'w', timeout=60) as outfile:
-        json.dump(data, outfile, indent=4)
-        # flush and sync to filesystem
-        outfile.flush()
-        os.fsync(outfile.fileno())
-
-# settings = getSettings()
-# setSettings(settings)
-# exit()
-
 
 def getTime(withColon = False):
     if withColon:
@@ -111,22 +44,52 @@ def getDay():
     return int(str(datetime.datetime.now().date())[:10].replace("-",""))
 
 
-def SMTWRFS(schedule):
-    # print(schedule)
-    dayOfTheWeek = datetime.date.isoweekday(datetime.datetime.now().date()) 
-    # dayOfTheWeek += 1
-    dayNumber = dayOfTheWeek % 7
-    # print(dayNumber)
-    char = schedule[dayNumber]
-    # print(char)
-    if char == "1":
-        return True
+def getDayOfWeek():
+    dayNum = datetime.date.isoweekday(datetime.datetime.now().date())
+
+    if dayNum == 0:
+        return "M"
+    elif dayNum == 1:
+        return "T"
+    elif dayNum == 2:
+        return "W"
+    elif dayNum == 3:
+        return "R"
+    elif dayNum == 4:
+        return "F"
+    elif dayNum == 5:
+        return "Sa"
+    # elif dayNum == 6:
     else:
-        return False
+        return "Su"
+    
+    
+def diffSeconds():
+    return(60 - datetime.datetime.now().second + 1)
+
+# diffSeconds()
+# exit()
+
+# print(datetime.date.weekday(datetime.datetime.now().date()))
+# exit()
+
+# def SMTWRFS(schedule):
+#     # print(schedule)
+#     dayOfTheWeek = datetime.date.isoweekday(datetime.datetime.now().date()) 
+#     # dayOfTheWeek += 1
+#     dayNumber = dayOfTheWeek % 7
+#     # print(dayNumber)
+#     char = schedule[dayNumber]
+#     # print(char)
+#     if char == "1":
+#         return True
+#     else:
+#         return False
 
 
 def playAlarms():
-    settings = getSettings()
+    settings = ADM.getSettings()
+    # print(settings)
 
     t = getTime()
     # print(t)
@@ -134,41 +97,39 @@ def playAlarms():
     d = getDay()
     # print(d)
 
+    if settings["disabledUntilAfter"] == 0:
+        print("*")
+    elif settings["disabledUntilAfter"] < d:
+        return ""
+    else:
+        settings["disabledUntilAfter"] = 0
+        ADM.setSettings(settings)
 
     i = 0
     while i < len(settings["alarms"]):
 
-        # print(SMTWRFS(settings["alarms"][i]["SMTWRFS"]) )
+        if settings["alarms"][i]["enable"] == True and settings["alarms"][i][getDayOfWeek()] == True:
 
-        #enabled and has not played today
-        if settings["alarms"][i]["enable"] == True and SMTWRFS(settings["alarms"][i]["SMTWRFS"]) and settings["alarms"][i]["exeDay"] < d:
-            if settings["alarms"][i]["time"] <= t and settings["alarms"][i]["time"] + 10 >= t:
-                # StartSpotify("\"" + settings["PlayList"] + "\"")
-                
+            alarmTime = (int)(settings["alarms"][i]["time"].replace(":",""))
+            # print(alarmTime)
+
+            if alarmTime == t:
+
                 if re.match("[A-Z]:.*",settings["alarms"][i]["file"]):
                     os.startfile(settings["alarms"][i]["file"])
                 else:
                     os.startfile(os.path.join(dir,settings["alarms"][i]["file"]))
 
-                # os.startfile(os.path.join(dir,settings["alarms"][i]["file"]))
                 settings["alarms"][i]["exeDay"] = d
-                setSettings(settings)
+                ADM.setSettings(settings)
                 setSystemVolume(settings["alarms"][i]["volume"])
                 print("*** playing Alarm" + str(i) + " ***")
         i+=1
 
-def MainMenu():
-    # try:
-        while True:
-            # os.system('cls')
-            # print( Back.LIGHTRED_EX + Fore.BLACK + Style.NORMAL + "***Press Ctrl+C to edit settings***")
-            # print(Back.WHITE + Fore.BLACK + Style.DIM + "CurrentTime: " + str(getTime(True)) + " ")
-            # print(Style.RESET_ALL)
-            # printTimes()
-            # print(Style.RESET_ALL)
-            playAlarms()
-            # print("string"[:2])
-            time.sleep(30)
 
-
-MainMenu()
+while True:
+    # print(datetime.datetime.now().time())
+    # print(diffSeconds())
+    playAlarms()
+    time.sleep(diffSeconds())
+    # time.sleep(1)
