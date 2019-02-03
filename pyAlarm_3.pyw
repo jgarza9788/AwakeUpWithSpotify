@@ -1,23 +1,46 @@
+
+
 import os,json,time,subprocess
+
+# import sys
+# import qdarkstyle
+
 from PySide2 import QtCore, QtGui, QtWidgets
+# from PyQt5 import QtCore, QtGui, QtWidgets
 
 from functools import partial
 
 import alarmDataManager as ADM
 
+import playFile
+
 dir = os.path.dirname(__file__)
 settingsPath = os.path.join(dir,"settings.json").replace("\\","/")
 settings = ""
 
-# print(datetime.datetime.now().time())
-# print(time.strptime("09:00", "%H:%M")  )
-# thisTime = time.strptime("09:00", "%H:%M") 
-# print(thisTime.tm_hour)
-# print(thisTime.tm_min)
-# exit()
+# enableStyle = ".QWidget {background-color: #F0F0F0;border-color:#dddddd;border-style:solid;border-width: 1px}"
+# disableStyle = ".QWidget {background-color: #a0a0a0;border-color:#dddddd;border-style:solid;border-width: 1px}"
 
-enableStyle = ".QWidget {background-color: #F0F0F0;border-color:#6b6b6b;border-style:solid;border-width: 1px}"
-disableStyle = ".QWidget {background-color: #a0a0a0;border-color:#6b6b6b;border-style:solid;border-width: 1px}"
+# enableStyle = ".QWidget {background-color: #F0F0F0}"
+# disableStyle = ".QWidget {background-color: #a0a0a0}"
+
+# enableStyle = ""
+# disableStyle = ""
+
+# enableStyle = "QWidget {background-color: #19232D}"
+# disableStyle = "QWidget {background-color: #0c1116}"
+
+enableStyle = ".QWidget {background-image: linear-gradient(red, yellow);border-color:#dddddd;border-style:solid;border-width: 1px}"
+disableStyle = ".QWidget {background-color: #a0a0a0;border-color:#dddddd;border-style:solid;border-width: 1px}"
+
+# dayEnableStyle = "QPushButton {background:#E5F1FB;border-color:#007AD9;border-style:solid;border-width: 1px}"
+# dayDisableStyle = "QPushButton {background:#7f7f7f;border-color:#000000;border-style:solid;border-width: 1px}"
+
+# dayEnableStyle = "QPushButton {background:#505F69;border-color:#ffffff;border-style:solid;border-width: 1px}"
+# dayDisableStyle = "QPushButton {background:#19232D;border-color:#000000;border-style:solid;border-width: 1px}"
+
+dayEnableStyle = "QPushButton {background:#0D8AED;border-radius: 10px;}"
+dayDisableStyle = "QPushButton {background:#727272;border-radius: 10px;}"
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -190,26 +213,40 @@ class MainWindow(QtWidgets.QMainWindow):
         self.delete.clicked.connect(deleteFunc)
         layout.addWidget(self.delete,0,9,1,1)
 
-        frameStyle = QtWidgets.QFrame.Sunken | QtWidgets.QFrame.Panel
-        self.openFileNameLabel = QtWidgets.QLabel(alarmData["file"])
-        self.openFileNameLabel.index = i
-        self.openFileNameLabel.setFrameStyle(frameStyle)
+        playIcon =  QtGui.QIcon(os.path.join(dir,"images","play.png"))
+        self.playNow = QtWidgets.QPushButton(playIcon,alarmData["file"],self)
+        self.playNow.file = alarmData["file"]
+        self.playNow.volume = alarmData["volume"]
+        self.playNow.index = i
+        self.playNow.setStyleSheet("QPushButton {text-align:left}")
+        playfunc = partial(playFile.OpenFile,self.playNow)
+        self.playNow.clicked.connect(playfunc)
+        layout.addWidget(self.playNow,1,1,1,9)
+
+        # frameStyle = QtWidgets.QFrame.Sunken | QtWidgets.QFrame.Panel
+        # self.openFileNameLabel = QtWidgets.QLabel(alarmData["file"])
+        # self.openFileNameLabel.index = i
+        # self.openFileNameLabel.setFrameStyle(frameStyle)
         self.openFileNameButton = QtWidgets.QPushButton('File:') #"QFileDialog.get&OpenFileName()")
-        openFileNameFunct = partial(self.setOpenFileName,self.openFileNameLabel)
+        openFileNameFunct = partial(self.setOpenFileName,self.playNow)
         self.openFileNameButton.clicked.connect(openFileNameFunct)
         layout.addWidget(self.openFileNameButton,1,0)
-        layout.addWidget(self.openFileNameLabel,1,1,1,9)
+        # layout.addWidget(self.openFileNameLabel,1,1)
 
-        self.volumneLabel = QtWidgets.QLabel("Volume (" + str((int)(alarmData["volume"] * 100)) + ")")
-        self.volumne = QtWidgets.QSlider(QtCore.Qt.Horizontal,self)
-        self.volumne.setMaximum(20)
-        self.volumne.setMinimum(1)
-        self.volumne.setValue(alarmData["volume"] * 100)
-        self.volumne.index = i
-        valumeFunc =  partial(self.volumeChange,self.volumneLabel,self.volumne)
-        self.volumne.valueChanged.connect(valumeFunc)
-        layout.addWidget(self.volumneLabel, 2, 0)
-        layout.addWidget(self.volumne, 2, 1,1,9)
+        # print("{:0>2d}".format(5) + "xx")
+
+        # self.volumeLabel = QtWidgets.QLabel("Volume (" + str((int)(alarmData["volume"] * 100)) + ")")
+        self.volumeLabel =  QtWidgets.QLabel("Volume (" + "{:0>2d}".format((int)(alarmData["volume"] * 100)) + ")")
+        self.volume = QtWidgets.QSlider(QtCore.Qt.Horizontal,self)
+        self.volume.setMaximum(20)
+        self.volume.setMinimum(1)
+        self.volume.setValue(alarmData["volume"] * 100)
+        self.volume.index = i
+        valumeFunc =  partial(self.volumeChange,self.playNow,self.volumeLabel,self.volume)
+        self.volume.valueChanged.connect(valumeFunc)
+        # self.volume.sliderReleased.connect(valumeFunc)
+        layout.addWidget(self.volumeLabel, 2, 0)
+        layout.addWidget(self.volume, 2, 1,1,9)
 
         self.TimeLable = QtWidgets.QLabel("Time")
         self.Time = QtWidgets.QTimeEdit()
@@ -235,9 +272,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Su.value = alarmData["Su"] 
         self.Su.setMaximumSize (48,48)
         if alarmData["Su"] == True:
-            self.Su.setStyleSheet("QPushButton {background:#E5F1FB;border-color:#007AD9;border-style:solid;border-width: 1px}")
+            self.Su.setStyleSheet(dayEnableStyle)
         else:
-            self.Su.setStyleSheet("QPushButton {background:#7f7f7f;border-color:#000000;border-style:solid;border-width: 1px}")
+            self.Su.setStyleSheet(dayDisableStyle)
         dayFunc = partial(self.checkDay,self.Su)
         self.Su.clicked.connect(dayFunc)
 
@@ -255,9 +292,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.M.value = alarmData["M"] 
         self.M.setMaximumSize (48,48)
         if alarmData["M"] == True:
-            self.M.setStyleSheet("QPushButton {background:#E5F1FB;border-color:#007AD9;border-style:solid;border-width: 1px}")
+            self.M.setStyleSheet(dayEnableStyle)
         else:
-            self.M.setStyleSheet("QPushButton {background:#7f7f7f;border-color:#000000;border-style:solid;border-width: 1px}")
+            self.M.setStyleSheet(dayDisableStyle)
         dayFunc = partial(self.checkDay,self.M)
         self.M.clicked.connect(dayFunc)
 
@@ -267,9 +304,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.T.value = alarmData["T"] 
         self.T.setMaximumSize (48,48)
         if alarmData["T"] == True:
-            self.T.setStyleSheet("QPushButton {background:#E5F1FB;border-color:#007AD9;border-style:solid;border-width: 1px}")
+            self.T.setStyleSheet(dayEnableStyle)
         else:
-            self.T.setStyleSheet("QPushButton {background:#7f7f7f;border-color:#000000;border-style:solid;border-width: 1px}")
+            self.T.setStyleSheet(dayDisableStyle)
         dayFunc = partial(self.checkDay,self.T)
         self.T.clicked.connect(dayFunc)
 
@@ -279,9 +316,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.W.value = alarmData["W"] 
         self.W.setMaximumSize (48,48)
         if alarmData["W"] == True:
-            self.W.setStyleSheet("QPushButton {background:#E5F1FB;border-color:#007AD9;border-style:solid;border-width: 1px}")
+            self.W.setStyleSheet(dayEnableStyle)
         else:
-            self.W.setStyleSheet("QPushButton {background:#7f7f7f;border-color:#000000;border-style:solid;border-width: 1px}")
+            self.W.setStyleSheet(dayDisableStyle)
         dayFunc = partial(self.checkDay,self.W)
         self.W.clicked.connect(dayFunc)
 
@@ -291,9 +328,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.R.value = alarmData["R"] 
         self.R.setMaximumSize (48,48)
         if alarmData["R"] == True:
-            self.R.setStyleSheet("QPushButton {background:#E5F1FB;border-color:#007AD9;border-style:solid;border-width: 1px}")
+            self.R.setStyleSheet(dayEnableStyle)
         else:
-            self.R.setStyleSheet("QPushButton {background:#7f7f7f;border-color:#000000;border-style:solid;border-width: 1px}")
+            self.R.setStyleSheet(dayDisableStyle)
         dayFunc = partial(self.checkDay,self.R)
         self.R.clicked.connect(dayFunc)
 
@@ -303,9 +340,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.F.value = alarmData["F"] 
         self.F.setMaximumSize (48,48)
         if alarmData["F"] == True:
-            self.F.setStyleSheet("QPushButton {background:#E5F1FB;border-color:#007AD9;border-style:solid;border-width: 1px}")
+            self.F.setStyleSheet(dayEnableStyle)
         else:
-            self.F.setStyleSheet("QPushButton {background:#7f7f7f;border-color:#000000;border-style:solid;border-width: 1px}")
+            self.F.setStyleSheet(dayDisableStyle)
         dayFunc = partial(self.checkDay,self.F)
         self.F.clicked.connect(dayFunc)
 
@@ -315,9 +352,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Sa.value = alarmData["Sa"] 
         self.Sa.setMaximumSize (48,48)
         if alarmData["Sa"] == True:
-            self.Sa.setStyleSheet("QPushButton {background:#E5F1FB;border-color:#007AD9;border-style:solid;border-width: 1px}")
+            self.Sa.setStyleSheet(dayEnableStyle)
         else:
-            self.Sa.setStyleSheet("QPushButton {background:#7f7f7f;border-color:#000000;border-style:solid;border-width: 1px}")
+            self.Sa.setStyleSheet(dayDisableStyle)
         dayFunc = partial(self.checkDay,self.Sa)
         self.Sa.clicked.connect(dayFunc)
 
@@ -349,10 +386,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if dayBox.value == True:
             dayBox.value = False
-            dayBox.setStyleSheet("QPushButton {background:#7f7f7f;border-color:#000000;border-style:solid;border-width: 1px}")
+            dayBox.setStyleSheet(dayDisableStyle)
         else:
             dayBox.value = True
-            dayBox.setStyleSheet("QPushButton {background:#E5F1FB;border-color:#007AD9;border-style:solid;border-width: 1px}")
+            dayBox.setStyleSheet(dayEnableStyle)
 
         settings = ADM.getSettings()
         settings["alarms"][dayBox.index][dayBox.day] = dayBox.value
@@ -376,13 +413,16 @@ class MainWindow(QtWidgets.QMainWindow):
         # settings["alarms"][time.index][time] = 
 
 
-    def volumeChange(self,label,volume,value):
+    def volumeChange(self,playnow,label,volume,value):
+    # def volumeChange(self,playnow,label,volume,i,value):
+        # print(i)
         print(volume)
         print(volume.index)
         print(value)
         settings = ADM.getSettings()
         settings["alarms"][volume.index]["volume"] = value/100
-        label.setText("Volume (" + str(value) + ")")
+        playnow = value/100
+        label.setText("Volume (" + "{:0>2d}".format((int)(value)) + ")")
         print(settings["alarms"][volume.index]["volume"])
         ADM.setSettings(settings)
         # self.refresh()
@@ -470,6 +510,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "All Files (*);;Text Files (*.txt)", "", options)
         if fileName:
             thisLabel.setText(fileName)
+            thisLabel.file = fileName
             settings["alarms"][thisLabel.index]["file"] = fileName
             ADM.setSettings(settings)
             # self.openFileNameLabel.setText(fileName)
@@ -566,6 +607,14 @@ if __name__ == '__main__':
 
     app = QtWidgets.QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
+    # app.setStyleSheet("")
+    app.setStyle(QtWidgets.QStyleFactory.create("Fusion"))
+    # app.setStyle(QtWidgets.QStyleFactory.create("Windows"))
+    # app.setStyle(QtWidgets.QStyleFactory.create("windowsvista"))
+
+    print(QtWidgets.QStyleFactory.keys())
+
+    # print(QtWidgets.QStyle.)
 
     mainWin = MainWindow()
     mainWin.show()
@@ -574,3 +623,4 @@ if __name__ == '__main__':
     proc = subprocess.Popen(['py', timer], shell=True)
 
     sys.exit(app.exec_())
+

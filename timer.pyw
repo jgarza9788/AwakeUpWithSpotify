@@ -126,10 +126,10 @@ def playAlarms():
                 print("*** playing Alarm" + str(i) + " ***")
         i+=1
 
-
-while True:
-    # print(datetime.datetime.now().time())
-    # print(diffSeconds())
-    playAlarms()
-    time.sleep(diffSeconds())
-    # time.sleep(1)
+if __name__ == "__main__":    
+    while True:
+        # print(datetime.datetime.now().time())
+        # print(diffSeconds())
+        playAlarms()
+        time.sleep(diffSeconds())
+        # time.sleep(1)

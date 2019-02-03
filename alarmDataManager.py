@@ -19,7 +19,7 @@ def createSettings():
     data["alarms"] = []
     data["alarms"].append({
         "enable": True,
-        "file": "alarms\\Awake.mp3",
+        "file": "alarms\\Awaken.mp3",
         "volume": 0.05,
         "time": "09:00",
         "Su": False,
@@ -42,14 +42,14 @@ def createSettings():
 
 def getSettings():
     if os.path.isfile(settingsPath):
-        with open(settingsPath,'r') as json_file:  
-            # print("allData:: \n" + str(settings) + "\n")
-            return json.load(json_file)
-        # with portalocker.Lock(settingsPath,'w', timeout=60) as json_file:
+        # with open(settingsPath,'r') as json_file:  
+        #     # print("allData:: \n" + str(settings) + "\n")
         #     return json.load(json_file)
-        #     # flush and sync to filesystem
-        #     outfile.flush()
-        #     os.fsync(outfile.fileno())
+        with portalocker.Lock(settingsPath,'r', timeout=60) as json_file:
+            return json.load(json_file)
+            # flush and sync to filesystem
+            outfile.flush()
+            os.fsync(outfile.fileno())
     else:
         createSettings()
         with open(settingsPath,'r') as f:
@@ -61,7 +61,7 @@ def getSettings():
         #     os.fsync(outfile.fileno())
 
 def setSettings(data):
-    print("data: \n" + str(data))
+    # print("data: \n" + str(data))
     # with open(settingsPath, 'w') as outfile:
     #     json.dump(data, outfile, indent=4)
     with portalocker.Lock(settingsPath,'w', timeout=60) as outfile:
