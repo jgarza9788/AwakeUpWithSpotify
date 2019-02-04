@@ -1,17 +1,20 @@
 import os, json,datetime, re,time,subprocess
 from pathlib import Path
 
-import portalocker
-
-
 dir = os.path.dirname(__file__)
 
 settingsPath = os.path.join(dir,"settings.json").replace("\\","/")
 settings = ""
 
+fileLock = False
 
-# print(str(datetime.datetime.now().time())[:5])
-# exit()
+def lockFile():
+    fileLock = True
+
+def unlockFile():
+    fileLock = False
+
+
 
 def createSettings():
     data = {}
@@ -31,44 +34,62 @@ def createSettings():
         "Sa": False,
         "exeDay": 0
     })
-    # with open(settingsPath, 'w') as outfile:
-    #     json.dump(data, outfile, indent=4)
-    #     setSettings(data)
-    with portalocker.Lock(settingsPath,'w', timeout=60) as outfile:
+    with open(settingsPath, 'w') as outfile:
         json.dump(data, outfile, indent=4)
-        # flush and sync to filesystem
-        outfile.flush()
-        os.fsync(outfile.fileno())
+        # setSettings(data)
+    # with portalocker.Lock(settingsPath,'w', timeout=60) as outfile:
+    #     json.dump(data, outfile, indent=4)
+    #     # flush and sync to filesystem
+    #     outfile.flush()
+    #     os.fsync(outfile.fileno())
 
 def getSettings():
+    data = ""
+    while fileLock:
+        print("file is Locked")
+        time.sleep(2)
+    lockFile()
     if os.path.isfile(settingsPath):
-        # with open(settingsPath,'r') as json_file:  
-        #     # print("allData:: \n" + str(settings) + "\n")
+        with open(settingsPath,'r') as json_file:  
+            # print("allData:: \n" + str(settings) + "\n")
+            data = json.load(json_file)
+            # return json.load(json_file)
+        # with portalocker.Lock(settingsPath,'r', timeout=60) as json_file:
         #     return json.load(json_file)
-        with portalocker.Lock(settingsPath,'r', timeout=60) as json_file:
-            return json.load(json_file)
-            # flush and sync to filesystem
-            outfile.flush()
-            os.fsync(outfile.fileno())
+        #     # flush and sync to filesystem
+        #     outfile.flush()
+        #     os.fsync(outfile.fileno())
     else:
+        # print("*")
         createSettings()
         with open(settingsPath,'r') as f:
-            return json.load(f)
+            data = json.load(f)
+            # return json.load(f)
         # with portalocker.Lock(settingsPath,'w', timeout=60) as f:
         #     return json.load(json_file)
         #     # flush and sync to filesystem
         #     outfile.flush()
         #     os.fsync(outfile.fileno())
+    unlockFile()
+    return data
+
+# print(getSettings())
 
 def setSettings(data):
+    while fileLock:
+        print("file is Locked")
+        time.sleep(2)
+    lockFile()
     # print("data: \n" + str(data))
-    # with open(settingsPath, 'w') as outfile:
-    #     json.dump(data, outfile, indent=4)
-    with portalocker.Lock(settingsPath,'w', timeout=60) as outfile:
+    with open(settingsPath, 'w') as outfile:
         json.dump(data, outfile, indent=4)
-        # flush and sync to filesystem
-        outfile.flush()
-        os.fsync(outfile.fileno())
+    # with portalocker.Lock(settingsPath,'w', timeout=60) as outfile:
+    #     json.dump(data, outfile, indent=4)
+    #     # flush and sync to filesystem
+    #     outfile.flush()
+    #     os.fsync(outfile.fileno())
+    # fileLock = False
+    unlockFile()
 
 def newAlarm(data):
     if len(data["alarms"]) > 0:

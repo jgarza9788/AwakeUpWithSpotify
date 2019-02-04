@@ -7,8 +7,10 @@ An alarm clock (written in Python, Json) that plays mp3 files.
 ## Requires
 * Python  
 * pycaw (python Module)  
-~~* colorama (python Module)~~
-* portalocker
+    * pycaw is a module for adjusting the volume in windows
+        * this is why it will need adjusting before working on macOS or Linux
+* portalocker (python Module)  
+* PySide2 (python Module)  
 
 
 ## Settings
@@ -19,7 +21,8 @@ Obviously, you'll want to adjust the file to your liking.
 true or false
 
 **file**  
-the mp3 file to play
+the mp3 file to play  
+but it can be any file you system can open
 
 **volume**  
 the volume the computer should be at
@@ -27,42 +30,29 @@ the volume the computer should be at
 **time**  
 time to play the alarm (military - no colon)
 
-**SMTWRFS**  
-days the alarm should ring.   
-0 = no, 1 = yes.  
-i.e. 0111110 = weekdays  
-1000001 = weekends  
-0101010 = monday, wednesday, friday  
+**Sa,M,T,W,R,F,Su**   
+these are bools on whether or not the alarm should execute on those days.
 
 **exeDay**  
 the last day this alarm was executed  
 
 ```json
 {
+    "disabledUntilAfter": 0,
     "alarms": [
         {
             "enable": true,
-            "file": "D:\\Music\\8Bit Universe\\Unknown Album\\Safety Dance (8Bit Cover).mp3",
-            "volume": 0.01,
-            "time": 400,
-            "SMTWRFS": "0111110",
-            "exeDay": 20181220
-        },
-        {
-            "enable": true,
-            "file": "D:\\Music\\8Bit Universe\\Unknown Album\\Safety Dance (8Bit Cover).mp3",
-            "volume": 0.02,
-            "time": 415,
-            "SMTWRFS": "0111110",
-            "exeDay": 20181220
-        },
-        {
-            "enable": true,
-            "file": "D:\\Music\\8Bit Universe\\Unknown Album\\Safety Dance (8Bit Cover).mp3",
-            "volume": 0.05,
-            "time": 430,
-            "SMTWRFS": "0111110",
-            "exeDay": 20181220
+            "file": "alarms\\Awaken.mp3",
+            "volume": 0.12,
+            "time": "09:00",
+            "Su": false,
+            "M": true,
+            "T": true,
+            "W": true,
+            "R": true,
+            "F": true,
+            "Sa": false,
+            "exeDay": 0
         }
     ]
 }
@@ -74,4 +64,4 @@ the last day this alarm was executed
 * In System Tray
 * Disable Until Tomorrow
 
-![Gif](https://i.imgur.com/mFBODIy.gif)
+

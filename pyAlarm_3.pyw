@@ -243,11 +243,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.volume.setValue(alarmData["volume"] * 100)
         self.volume.index = i
         valumeFunc =  partial(self.volumeChange,self.playNow,self.volumeLabel,self.volume)
-        self.volume.valueChanged.connect(valumeFunc)
-        # self.volume.sliderReleased.connect(valumeFunc)
+        self.volume.sliderReleased.connect(valumeFunc)
         layout.addWidget(self.volumeLabel, 2, 0)
         layout.addWidget(self.volume, 2, 1,1,9)
-
         self.TimeLable = QtWidgets.QLabel("Time")
         self.Time = QtWidgets.QTimeEdit()
         self.Time.index = i
@@ -413,19 +411,19 @@ class MainWindow(QtWidgets.QMainWindow):
         # settings["alarms"][time.index][time] = 
 
 
-    def volumeChange(self,playnow,label,volume,value):
-    # def volumeChange(self,playnow,label,volume,i,value):
+    def volumeChange(self,playnow,label,volume):
         # print(i)
         print(volume)
         print(volume.index)
-        print(value)
+        print(volume.value())
+        # print(value)
         settings = ADM.getSettings()
-        settings["alarms"][volume.index]["volume"] = value/100
-        playnow = value/100
-        label.setText("Volume (" + "{:0>2d}".format((int)(value)) + ")")
+        settings["alarms"][volume.index]["volume"] = volume.value()/100
+        playnow = volume.value()/100
+        label.setText("Volume (" + "{:0>2d}".format((int)(volume.value())) + ")")
         print(settings["alarms"][volume.index]["volume"])
         ADM.setSettings(settings)
-        # self.refresh()
+        self.refresh()
 
     def enableAlarm(self,thisCheckBox,nItem,state):
         print(state) # 2 == yes, 0 == no
