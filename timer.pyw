@@ -99,7 +99,7 @@ def playAlarms():
 
     if settings["disabledUntilAfter"] == 0:
         print("*")
-    elif settings["disabledUntilAfter"] < d:
+    elif settings["disabledUntilAfter"] <= d:
         return ""
     else:
         settings["disabledUntilAfter"] = 0

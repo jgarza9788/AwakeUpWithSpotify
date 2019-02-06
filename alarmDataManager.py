@@ -50,15 +50,20 @@ def getSettings():
         time.sleep(2)
     lockFile()
     if os.path.isfile(settingsPath):
-        with open(settingsPath,'r') as json_file:  
-            # print("allData:: \n" + str(settings) + "\n")
-            data = json.load(json_file)
-            # return json.load(json_file)
-        # with portalocker.Lock(settingsPath,'r', timeout=60) as json_file:
-        #     return json.load(json_file)
-        #     # flush and sync to filesystem
-        #     outfile.flush()
-        #     os.fsync(outfile.fileno())
+        try:
+            with open(settingsPath,'r') as json_file:  
+                # print("allData:: \n" + str(settings) + "\n")
+                data = json.load(json_file)
+                # return json.load(json_file)
+            # with portalocker.Lock(settingsPath,'r', timeout=60) as json_file:
+            #     return json.load(json_file)
+            #     # flush and sync to filesystem
+            #     outfile.flush()
+            #     os.fsync(outfile.fileno())
+        except:
+            createSettings()
+            with open(settingsPath,'r') as f:
+                data = json.load(f)
     else:
         # print("*")
         createSettings()

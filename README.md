@@ -6,16 +6,17 @@ An alarm clock (written in Python, Json) that plays mp3 files.
 
 ## Requires
 * Python  
-* pycaw (python Module)  
+* pycaw (install python module with pip)  
     * pycaw is a module for adjusting the volume in windows
         * this is why it will need adjusting before working on macOS or Linux
-* portalocker (python Module)  
-* PySide2 (python Module)  
-
+* PySide2 (install python module with pip)  
 
 ## Settings
 settings are in a json file.  
 Obviously, you'll want to adjust the file to your liking. 
+
+**disabledUntilAfter**
+alarms will not play if before or on this date.
 
 **enable**  
 true or false
@@ -59,9 +60,30 @@ the last day this alarm was executed
 ```
 
 
+## UI
 
-## New Feature(s)
-* In System Tray
-* Disable Until Tomorrow
+### Task Bar Icon
+![Imgur](https://i.imgur.com/n6IbL2S.png)
+
+### Main Window
+![Imgur](https://i.imgur.com/SMeA5VU.png)
+
+#### Tool Bar
+
+**Add New Alarm**  
+![Imgur](https://i.imgur.com/TA8lXOR.png)  
+
+**Show Json Code/Settings**  
+![Imgur](https://i.imgur.com/r31fpS6.png)
+
+**disable alarms for the rest of the day**  
+![Imgur](https://i.imgur.com/nKjXCj4.png)
+
+**disable alarms for the rest of the day and tomorrow**  
+![Imgur](https://i.imgur.com/0rPkzQ5.png)
+
+**undo disable**
+![Imgur](https://i.imgur.com/EOd9zOH.png)
+
 
 
