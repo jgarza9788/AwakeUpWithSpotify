@@ -96,14 +96,18 @@ def playAlarms():
 
     d = getDay()
     # print(d)
+    # print(settings["disabledUntilAfter"])
 
     if settings["disabledUntilAfter"] == 0:
         print("*")
-    elif settings["disabledUntilAfter"] <= d:
+    elif settings["disabledUntilAfter"] >= d:
         return ""
     else:
         settings["disabledUntilAfter"] = 0
         ADM.setSettings(settings)
+
+    # print(d)
+    # print(settings["disabledUntilAfter"])
 
     i = 0
     while i < len(settings["alarms"]):
@@ -120,8 +124,8 @@ def playAlarms():
                 else:
                     os.startfile(os.path.join(dir,settings["alarms"][i]["file"]))
 
-                settings["alarms"][i]["exeDay"] = d
-                ADM.setSettings(settings)
+                # settings["alarms"][i]["exeDay"] = d
+                # ADM.setSettings(settings)
                 setSystemVolume(settings["alarms"][i]["volume"])
                 print("*** playing Alarm" + str(i) + " ***")
         i+=1

@@ -573,6 +573,7 @@ class MainWindow(QtWidgets.QMainWindow):
         sys.exit()
 
     def OpenMainWindow(self):
+        self.refresh()
         mainWin.show()
 
     def openSettingsCode(self):
