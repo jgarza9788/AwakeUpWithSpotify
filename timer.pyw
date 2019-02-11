@@ -1,7 +1,12 @@
+"""
+this is a subprocess 
+"""
 
+#import libraries
 import os, json,datetime, re,time
 from pathlib import Path
 
+# this library is used to control data
 import alarmDataManager as ADM
 
 #audio settings stuff
@@ -9,41 +14,34 @@ from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
-
+# sets the volume level
 def setSystemVolume(level):
-    # from ctypes import cast, POINTER
-    # from comtypes import CLSCTX_ALL
-    # from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
     devices = AudioUtilities.GetSpeakers()
     interface = devices.Activate(
         IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
     volume = cast(interface, POINTER(IAudioEndpointVolume))
     volume.SetMasterVolumeLevelScalar(level,None)
 
-
+#gets the current volume level
 def getSystemVolume():
-    # from ctypes import cast, POINTER
-    # from comtypes import CLSCTX_ALL
-    # from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
     devices = AudioUtilities.GetSpeakers()
     interface = devices.Activate(
         IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
     volume = cast(interface, POINTER(IAudioEndpointVolume))
-    # print(volume.GetMasterVolumeLevelScalar())
     return round(volume.GetMasterVolumeLevelScalar(),4)
 
-
-
+# gets the current time (int or string)
 def getTime(withColon = False):
     if withColon:
         return str(datetime.datetime.now().time())[:5]
     else:
         return int(str(datetime.datetime.now().time())[:5].replace(":",""))
 
+# gets the current day in YYYYMMDD format
 def getDay():
     return int(str(datetime.datetime.now().date())[:10].replace("-",""))
 
-
+# gets day of the week (Su,M,T,W,R,F,Sa)
 def getDayOfWeek():
     dayNum = datetime.date.isoweekday(datetime.datetime.now().date())
 
@@ -59,64 +57,46 @@ def getDayOfWeek():
         return "F"
     elif dayNum == 5:
         return "Sa"
-    # elif dayNum == 6:
     else:
         return "Su"
     
-    
+# gets the number of seconds until the next minute
 def diffSeconds():
     return(60 - datetime.datetime.now().second + 1)
 
-# diffSeconds()
-# exit()
-
-# print(datetime.date.weekday(datetime.datetime.now().date()))
-# exit()
-
-# def SMTWRFS(schedule):
-#     # print(schedule)
-#     dayOfTheWeek = datetime.date.isoweekday(datetime.datetime.now().date()) 
-#     # dayOfTheWeek += 1
-#     dayNumber = dayOfTheWeek % 7
-#     # print(dayNumber)
-#     char = schedule[dayNumber]
-#     # print(char)
-#     if char == "1":
-#         return True
-#     else:
-#         return False
-
-
+# play Alarms
 def playAlarms():
+    #get all the settings
     settings = ADM.getSettings()
-    # print(settings)
 
     t = getTime()
     # print(t)
 
     d = getDay()
     # print(d)
-    # print(settings["disabledUntilAfter"])
 
+    # do nothing/print if disabledUntilAfter is 0
     if settings["disabledUntilAfter"] == 0:
         print("*")
+    # don't play any alarm if disabledUntilAfter is greater than today
     elif settings["disabledUntilAfter"] >= d:
         return ""
+    # else reset disabledUntilAfter to 0
     else:
         settings["disabledUntilAfter"] = 0
         ADM.setSettings(settings)
 
-    # print(d)
-    # print(settings["disabledUntilAfter"])
-
+    #loop through each alarm 
     i = 0
     while i < len(settings["alarms"]):
 
+        # make sure it's enabled and should play today
         if settings["alarms"][i]["enable"] == True and settings["alarms"][i][getDayOfWeek()] == True:
 
+            #get time as an int
             alarmTime = (int)(settings["alarms"][i]["time"].replace(":",""))
-            # print(alarmTime)
 
+            # if alarmTime is this time ...play
             if alarmTime == t:
 
                 if re.match("[A-Z]:.*",settings["alarms"][i]["file"]):
@@ -124,16 +104,13 @@ def playAlarms():
                 else:
                     os.startfile(os.path.join(dir,settings["alarms"][i]["file"]))
 
-                # settings["alarms"][i]["exeDay"] = d
-                # ADM.setSettings(settings)
                 setSystemVolume(settings["alarms"][i]["volume"])
                 print("*** playing Alarm" + str(i) + " ***")
         i+=1
 
+#used for texting
 if __name__ == "__main__":    
     while True:
-        # print(datetime.datetime.now().time())
-        # print(diffSeconds())
         playAlarms()
         time.sleep(diffSeconds())
         # time.sleep(1)
