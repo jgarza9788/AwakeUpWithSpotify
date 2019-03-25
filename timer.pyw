@@ -66,6 +66,7 @@ def diffSeconds():
 
 # play Alarms
 def playAlarms():
+    print("playAlarms")
     #get all the settings
     settings = ADM.getSettings()
 

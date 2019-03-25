@@ -1,6 +1,6 @@
 
 
-import os,json,time,subprocess
+import os,json,time,re, subprocess
 
 # import sys
 # import qdarkstyle
@@ -12,11 +12,14 @@ from functools import partial
 
 import alarmDataManager as ADM
 
+import timer as t
+
 import playFile
 
 dir = os.path.dirname(__file__)
 settingsPath = os.path.join(dir,"settings.json").replace("\\","/")
 settings = ""
+
 
 # enableStyle = ".QWidget {background-color: #F0F0F0;border-color:#dddddd;border-style:solid;border-width: 1px}"
 # disableStyle = ".QWidget {background-color: #a0a0a0;border-color:#dddddd;border-style:solid;border-width: 1px}"
@@ -52,6 +55,12 @@ class MainWindow(QtWidgets.QMainWindow):
         print(settings["alarms"])
         print(len(settings["alarms"]))
         print(settings["alarms"][0])
+
+
+        self.timer = QtCore.QTimer(self)
+        self.timer.setInterval(60000)
+        self.timer.timeout.connect(t.playAlarms)
+        self.timer.start()
 
         self.createTrayIcon()
         
@@ -96,6 +105,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # timer = os.path.join(dir,"timer.py")
         # proc = subprocess.Popen(['py', timer], shell=True)
+
 
     def createToolBars(self):
         self.thisToolbar = QtWidgets.QToolBar()
@@ -242,8 +252,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.volume.setMinimum(1)
         self.volume.setValue(alarmData["volume"] * 100)
         self.volume.index = i
-        valumeFunc =  partial(self.volumeChange,self.playNow,self.volumeLabel,self.volume)
-        self.volume.sliderReleased.connect(valumeFunc)
+        # self.volumeUpdateLabel(self.volumeLabel,self.volume)
+        volumeFunc2 = partial(self.volumeUpdateLabel,self.volumeLabel,self.volume)
+        self.volume.sliderMoved.connect(volumeFunc2)
+        volumeFunc1 =  partial(self.volumeChange,self.playNow,self.volumeLabel,self.volume)
+        self.volume.sliderReleased.connect(volumeFunc1)
         layout.addWidget(self.volumeLabel, 2, 0)
         layout.addWidget(self.volume, 2, 1,1,9)
         self.TimeLable = QtWidgets.QLabel("Time")
@@ -410,6 +423,15 @@ class MainWindow(QtWidgets.QMainWindow):
         
         # settings["alarms"][time.index][time] = 
 
+    def volumeUpdateLabel(self,label,volume,x):
+        # print(i)
+        # print(self)
+        print(label)
+        print(volume)
+        # print(volume.index)
+        # print(volume.value())
+        # print(value)
+        label.setText("Volume (" + "{:0>2d}".format((int)(volume.value())) + ")")
 
     def volumeChange(self,playnow,label,volume):
         # print(i)
@@ -524,7 +546,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.displayMessage.setText(ADM.getTempDisable())
         self.displayMessage.setStyleSheet(ADM.getStyle())
 
-
     def createTrayIcon(self):
         self.trayIconMenu = QtWidgets.QMenu(self)
         
@@ -611,15 +632,15 @@ if __name__ == '__main__':
     # app.setStyle(QtWidgets.QStyleFactory.create("Windows"))
     # app.setStyle(QtWidgets.QStyleFactory.create("windowsvista"))
 
-    print(QtWidgets.QStyleFactory.keys())
+    # print(QtWidgets.QStyleFactory.keys())
 
     # print(QtWidgets.QStyle.)
 
+    hidden=os.path.join(dir,"hidden.pyw")
+    proc = subprocess.Popen(['py',hidden],shell=True)
+
     mainWin = MainWindow()
     mainWin.show()
-
-    timer = os.path.join(dir,"timer.pyw")
-    proc = subprocess.Popen(['py', timer], shell=True)
 
     sys.exit(app.exec_())
 
