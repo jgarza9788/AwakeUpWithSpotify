@@ -1,6 +1,6 @@
 
 
-import os,json,time,re, subprocess
+import os,json,time,re, subprocess,datetime,asyncio
 
 # import sys
 # import qdarkstyle
@@ -57,10 +57,7 @@ class MainWindow(QtWidgets.QMainWindow):
         print(settings["alarms"][0])
 
 
-        self.timer = QtCore.QTimer(self)
-        self.timer.setInterval(60000)
-        self.timer.timeout.connect(t.playAlarms)
-        self.timer.start()
+
 
         self.createTrayIcon()
         
@@ -103,9 +100,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.createToolBars()
 
+        self.timer = QtCore.QTimer(self)
+        self.timer.setInterval(60000)
+        self.timer.timeout.connect(t.playAlarms)
+        # self.timer.start()
+        asyncio.run(self.startTimer())
+
         # timer = os.path.join(dir,"timer.py")
         # proc = subprocess.Popen(['py', timer], shell=True)
 
+    async def startTimer(self):
+        while (datetime.datetime.now().second != 0):
+            print(datetime.datetime.now().second)
+            await asyncio.sleep(1)
+        print("timer Started")
+        self.timer.start()
 
     def createToolBars(self):
         self.thisToolbar = QtWidgets.QToolBar()
@@ -640,7 +649,8 @@ if __name__ == '__main__':
     proc = subprocess.Popen(['py',hidden],shell=True)
 
     mainWin = MainWindow()
-    mainWin.show()
+    # mainWin.show()
+    
 
     sys.exit(app.exec_())
 
