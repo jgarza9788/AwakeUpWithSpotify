@@ -10,6 +10,7 @@ An alarm clock (written in Python, Json) that plays mp3 files.
     * pycaw is a module for adjusting the volume in windows
         * this is why it will need adjusting before working on macOS or Linux
 * PySide2 (install python module with pip)  
+* contypes (install python module with pip)  
 
 ## Settings
 settings are in a json file.  
